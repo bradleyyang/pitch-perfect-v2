@@ -1,0 +1,127 @@
+.navbar {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.25rem;
+  background-color: var(--navbar-bg);
+  border: 1px solid var(--navbar-border);
+  border-radius: 12px;
+  width: calc(100% - 3rem);
+  max-width: 1080px;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+
+.navbar:hover {
+  border-color: var(--accent-blue);
+  box-shadow:
+    0 0 20px var(--accent-blue-glow),
+    0 0 40px rgba(59, 130, 246, 0.2),
+    inset 0 0 20px rgba(59, 130, 246, 0.05);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-logo {
+  height: 24px;
+  width: auto;
+}
+
+.navbar-title {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.brand-pitch,
+.brand-perfect {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent-blue);
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  border-radius: 6px;
+}
+
+.theme-toggle:hover {
+  color: var(--accent-blue);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    top: 1rem;
+    width: calc(100% - 2rem);
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+  }
+
+  .navbar-links {
+    order: 3;
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: space-around;
+    gap: 1rem;
+  }
+
+  .nav-link {
+    font-size: 0.85rem;
+  }
+
+  .navbar-title {
+    font-size: 1.1rem;
+  }
+
+  .brand-pitch,
+  .brand-perfect {
+    font-size: 1.3rem;
+  }
+}
