@@ -623,50 +623,213 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
 
         {activeTab === "insights" && (
           <div className="space-y-6">
-            <div className="prose prose-invert max-w-none">
-              <h4 className="text-lg font-medium text-[var(--text-primary)] mb-4">AI-Powered Analysis</h4>
-              <div className="p-4 bg-[var(--bg-tertiary)] rounded-lg whitespace-pre-wrap text-[var(--text-secondary)] leading-relaxed">
-                {data.summary}
+            {/* Overall Summary Section */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[var(--accent-blue)]/20 via-purple-500/10 to-[var(--accent-blue-light)]/20 border border-[var(--accent-blue)]/30 p-6">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--accent-blue)]/20 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--accent-blue)] to-purple-500 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <h4 className="text-lg font-semibold text-[var(--text-primary)]">AI Analysis</h4>
+                </div>
+                <div className="text-[var(--text-secondary)] text-sm leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">
+                  {data.summary}
+                </div>
               </div>
             </div>
 
-            {/* Delivery Tips */}
-            <div className="p-4 bg-[var(--accent-blue)]/10 rounded-lg border border-[var(--accent-blue)]/30">
-              <h5 className="font-medium text-[var(--accent-blue)] mb-3 flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                Presentation Tips
-              </h5>
-              <div className="grid md:grid-cols-2 gap-4 text-sm text-[var(--text-secondary)]">
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-blue)]">1.</span>
-                    Aim for 20-50 words per slide for optimal readability
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-blue)]">2.</span>
-                    Use bullet points to break up information
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-blue)]">3.</span>
-                    Keep one main idea per slide
-                  </li>
-                </ul>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-blue)]">4.</span>
-                    Use visuals to complement text
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-blue)]">5.</span>
-                    Practice your delivery timing
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[var(--accent-blue)]">6.</span>
-                    Engage your audience with questions
-                  </li>
-                </ul>
+            {/* Modular Insight Cards */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Structure Card */}
+              <div className={`rounded-xl border p-5 ${
+                analysis.structureScore >= 80 ? "bg-green-500/10 border-green-500/30" :
+                analysis.structureScore >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
+                "bg-red-500/10 border-red-500/30"
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                      </svg>
+                    </div>
+                    <h5 className="font-semibold text-[var(--text-primary)]">Structure</h5>
+                  </div>
+                  <div className={`px-2 py-0.5 rounded-full text-xs font-semibold text-white ${
+                    analysis.structureScore >= 80 ? "bg-gradient-to-r from-green-500 to-emerald-400" :
+                    analysis.structureScore >= 60 ? "bg-gradient-to-r from-yellow-500 to-amber-400" :
+                    "bg-gradient-to-r from-red-500 to-orange-400"
+                  }`}>
+                    {analysis.structureScore}/100
+                  </div>
+                </div>
+                <p className="text-sm text-[var(--text-secondary)] mb-3">
+                  {analysis.totalBullets > 0
+                    ? `Good use of ${analysis.totalBullets} bullet points across slides.`
+                    : "Consider adding bullet points for better organization."}
+                </p>
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <p className="text-xs text-[var(--text-tertiary)]">
+                    {analysis.totalBullets === 0 ? "Add bullet points to improve scanability" : "Maintain consistent formatting throughout"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Clarity Card */}
+              <div className={`rounded-xl border p-5 ${
+                analysis.clarityScore >= 80 ? "bg-green-500/10 border-green-500/30" :
+                analysis.clarityScore >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
+                "bg-red-500/10 border-red-500/30"
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </div>
+                    <h5 className="font-semibold text-[var(--text-primary)]">Clarity</h5>
+                  </div>
+                  <div className={`px-2 py-0.5 rounded-full text-xs font-semibold text-white ${
+                    analysis.clarityScore >= 80 ? "bg-gradient-to-r from-green-500 to-emerald-400" :
+                    analysis.clarityScore >= 60 ? "bg-gradient-to-r from-yellow-500 to-amber-400" :
+                    "bg-gradient-to-r from-red-500 to-orange-400"
+                  }`}>
+                    {analysis.clarityScore}/100
+                  </div>
+                </div>
+                <p className="text-sm text-[var(--text-secondary)] mb-3">
+                  {analysis.avgWordsPerSlide <= 50
+                    ? "Text density is appropriate for readability."
+                    : `Averaging ${analysis.avgWordsPerSlide} words/slide may overwhelm viewers.`}
+                </p>
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <p className="text-xs text-[var(--text-tertiary)]">
+                    {analysis.avgWordsPerSlide > 50 ? "Reduce text to 20-50 words per slide" : "Keep slides focused on one key message"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Content Card */}
+              <div className={`rounded-xl border p-5 ${
+                analysis.contentScore >= 80 ? "bg-green-500/10 border-green-500/30" :
+                analysis.contentScore >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
+                "bg-red-500/10 border-red-500/30"
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <h5 className="font-semibold text-[var(--text-primary)]">Content</h5>
+                  </div>
+                  <div className={`px-2 py-0.5 rounded-full text-xs font-semibold text-white ${
+                    analysis.contentScore >= 80 ? "bg-gradient-to-r from-green-500 to-emerald-400" :
+                    analysis.contentScore >= 60 ? "bg-gradient-to-r from-yellow-500 to-amber-400" :
+                    "bg-gradient-to-r from-red-500 to-orange-400"
+                  }`}>
+                    {analysis.contentScore}/100
+                  </div>
+                </div>
+                <p className="text-sm text-[var(--text-secondary)] mb-3">
+                  {analysis.totalWords} total words across {analysis.totalPages} slides.
+                </p>
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <p className="text-xs text-[var(--text-tertiary)]">
+                    {analysis.totalPages < 5 ? "Consider expanding with more supporting slides" : "Ensure each slide adds unique value"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Balance Card */}
+              <div className={`rounded-xl border p-5 ${
+                analysis.performanceData[3].value >= 80 ? "bg-green-500/10 border-green-500/30" :
+                analysis.performanceData[3].value >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
+                "bg-red-500/10 border-red-500/30"
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                      </svg>
+                    </div>
+                    <h5 className="font-semibold text-[var(--text-primary)]">Balance</h5>
+                  </div>
+                  <div className={`px-2 py-0.5 rounded-full text-xs font-semibold text-white ${
+                    analysis.performanceData[3].value >= 80 ? "bg-gradient-to-r from-green-500 to-emerald-400" :
+                    analysis.performanceData[3].value >= 60 ? "bg-gradient-to-r from-yellow-500 to-amber-400" :
+                    "bg-gradient-to-r from-red-500 to-orange-400"
+                  }`}>
+                    {analysis.performanceData[3].value}/100
+                  </div>
+                </div>
+                <p className="text-sm text-[var(--text-secondary)] mb-3">
+                  {analysis.slideStats.filter((s) => s.wordCount > 100).length > 0
+                    ? `${analysis.slideStats.filter((s) => s.wordCount > 100).length} slides have excessive text.`
+                    : "Content is well-distributed across slides."}
+                </p>
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <p className="text-xs text-[var(--text-tertiary)]">
+                    Aim for consistent word counts (20-50) across slides
+                  </p>
+                </div>
+              </div>
+
+              {/* Engagement Card */}
+              <div className={`rounded-xl border p-5 ${
+                analysis.performanceData[4].value >= 80 ? "bg-green-500/10 border-green-500/30" :
+                analysis.performanceData[4].value >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
+                "bg-red-500/10 border-red-500/30"
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <h5 className="font-semibold text-[var(--text-primary)]">Engagement</h5>
+                  </div>
+                  <div className={`px-2 py-0.5 rounded-full text-xs font-semibold text-white ${
+                    analysis.performanceData[4].value >= 80 ? "bg-gradient-to-r from-green-500 to-emerald-400" :
+                    analysis.performanceData[4].value >= 60 ? "bg-gradient-to-r from-yellow-500 to-amber-400" :
+                    "bg-gradient-to-r from-red-500 to-orange-400"
+                  }`}>
+                    {analysis.performanceData[4].value}/100
+                  </div>
+                </div>
+                <p className="text-sm text-[var(--text-secondary)] mb-3">
+                  {analysis.totalBullets > analysis.totalPages
+                    ? "Good visual hierarchy with bullet points."
+                    : "Add more visual breaks to maintain attention."}
+                </p>
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <p className="text-xs text-[var(--text-tertiary)]">
+                    Use visuals and questions to engage your audience
+                  </p>
+                </div>
               </div>
             </div>
           </div>

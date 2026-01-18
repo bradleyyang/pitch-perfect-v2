@@ -36,11 +36,6 @@ export interface AudioAnalysisResponse {
   verdict_audio: string; // base64 encoded audio
 }
 
-export interface ImprovedPitchResponse {
-  improved_text: string;
-  improved_audio: string; // base64 encoded audio
-}
-
 // ============ PDF Analysis Types ============
 
 export interface PDFPage {
@@ -96,29 +91,6 @@ export async function analyzePDF(file: File): Promise<PDFAnalysisResponse> {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: "PDF analysis failed" }));
     throw new Error(error.detail || "Failed to analyze PDF");
-  }
-
-  return response.json();
-}
-
-export async function generateImprovedPitch(
-  file: File,
-  transcript: string,
-  insights: Insights
-): Promise<ImprovedPitchResponse> {
-  const formData = new FormData();
-  formData.append("file", file, file.name);
-  formData.append("transcript", transcript);
-  formData.append("insights_json", JSON.stringify(insights));
-
-  const response = await fetch(`${API_BASE_URL}/generate-improved-pitch`, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: "Failed to generate improved pitch" }));
-    throw new Error(error.detail || "Failed to generate improved pitch");
   }
 
   return response.json();

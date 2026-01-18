@@ -1051,7 +1051,6 @@ export default function Home() {
                     <SpeechAnalysisResults
                       data={audioResult}
                       onReset={handleReset}
-                      audioFile={audioVideoFile?.file}
                     />
                   </div>
                 )}
