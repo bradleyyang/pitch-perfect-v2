@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, type ReactNode } from "react";
+import { useState, useMemo, useRef, useEffect, type ReactNode } from "react";
 import {
   XAxis,
   YAxis,
@@ -21,11 +21,12 @@ import {
   Area,
 } from "recharts";
 import type { AudioAnalysisResponse, WordAnalysis } from "@/app/services/api";
-import { calculateSpeedDistribution, calculateAverageSPM } from "@/app/services/api";
+import { calculateSpeedDistribution, calculateAverageSPM, generateImprovedPitch } from "@/app/services/api";
 
 interface SpeechAnalysisResultsProps {
   data: AudioAnalysisResponse;
   onReset: () => void;
+  audioFile?: File;
 }
 
 const FILLER_WORDS = new Set(["um", "uh", "like", "so", "actually", "you know"]);
@@ -48,9 +49,17 @@ const COLORS = {
 
 type TabType = "overview" | "transcript" | "timeline" | "loudness" | "insights";
 
-export function SpeechAnalysisResults({ data, onReset }: SpeechAnalysisResultsProps) {
+export function SpeechAnalysisResults({ data, onReset, audioFile }: SpeechAnalysisResultsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [selectedWord, setSelectedWord] = useState<WordAnalysis | null>(null);
+  const [isGeneratingImproved, setIsGeneratingImproved] = useState(false);
+  const [improvedPitchAudio, setImprovedPitchAudio] = useState<string | null>(null);
+  const [improvedPitchText, setImprovedPitchText] = useState<string | null>(null);
+  const [improvedPitchError, setImprovedPitchError] = useState<string | null>(null);
+  const [isPlayingVerdict, setIsPlayingVerdict] = useState(false);
+  const [isPlayingImproved, setIsPlayingImproved] = useState(false);
+  const verdictAudioRef = useRef<HTMLAudioElement | null>(null);
+  const improvedAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const analysis = useMemo(() => {
     const words = data.word_analysis || [];
@@ -172,6 +181,100 @@ export function SpeechAnalysisResults({ data, onReset }: SpeechAnalysisResultsPr
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  // Play verdict audio when insights tab is selected
+  useEffect(() => {
+    if (activeTab === "insights" && data.verdict_audio && !isPlayingVerdict) {
+      const audio = new Audio(`data:audio/mpeg;base64,${data.verdict_audio}`);
+      verdictAudioRef.current = audio;
+      audio.onplay = () => setIsPlayingVerdict(true);
+      audio.onended = () => setIsPlayingVerdict(false);
+      audio.onpause = () => setIsPlayingVerdict(false);
+      audio.play().catch((err) => console.error("Verdict audio playback failed:", err));
+    }
+    return () => {
+      if (verdictAudioRef.current) {
+        verdictAudioRef.current.pause();
+        verdictAudioRef.current = null;
+      }
+    };
+  }, [activeTab, data.verdict_audio]);
+
+  const playVerdictAudio = () => {
+    if (verdictAudioRef.current) {
+      verdictAudioRef.current.currentTime = 0;
+      verdictAudioRef.current.play();
+    } else if (data.verdict_audio) {
+      const audio = new Audio(`data:audio/mpeg;base64,${data.verdict_audio}`);
+      verdictAudioRef.current = audio;
+      audio.onplay = () => setIsPlayingVerdict(true);
+      audio.onended = () => setIsPlayingVerdict(false);
+      audio.onpause = () => setIsPlayingVerdict(false);
+      audio.play().catch((err) => console.error("Verdict audio playback failed:", err));
+    }
+  };
+
+  const handleGenerateImprovedPitch = async () => {
+    if (!audioFile || !data.insights) return;
+
+    setIsGeneratingImproved(true);
+    setImprovedPitchError(null);
+
+    try {
+      const result = await generateImprovedPitch(
+        audioFile,
+        data.transcription,
+        data.insights
+      );
+      setImprovedPitchAudio(result.improved_audio);
+      setImprovedPitchText(result.improved_text);
+
+      // Auto-play the improved pitch
+      const audio = new Audio(`data:audio/mpeg;base64,${result.improved_audio}`);
+      improvedAudioRef.current = audio;
+      audio.onplay = () => setIsPlayingImproved(true);
+      audio.onended = () => setIsPlayingImproved(false);
+      audio.onpause = () => setIsPlayingImproved(false);
+      audio.play().catch((err) => console.error("Improved pitch playback failed:", err));
+    } catch (error) {
+      setImprovedPitchError(error instanceof Error ? error.message : "Failed to generate improved pitch");
+    } finally {
+      setIsGeneratingImproved(false);
+    }
+  };
+
+  const playImprovedPitch = () => {
+    if (improvedAudioRef.current) {
+      improvedAudioRef.current.currentTime = 0;
+      improvedAudioRef.current.play();
+    } else if (improvedPitchAudio) {
+      const audio = new Audio(`data:audio/mpeg;base64,${improvedPitchAudio}`);
+      improvedAudioRef.current = audio;
+      audio.onplay = () => setIsPlayingImproved(true);
+      audio.onended = () => setIsPlayingImproved(false);
+      audio.onpause = () => setIsPlayingImproved(false);
+      audio.play().catch((err) => console.error("Improved pitch playback failed:", err));
+    }
+  };
+
+  const getScoreGradient = (score: number): string => {
+    if (score >= 4) return "from-green-500 to-emerald-400";
+    if (score >= 3) return "from-yellow-500 to-amber-400";
+    return "from-red-500 to-orange-400";
+  };
+
+  const getScoreBgColor = (score: number): string => {
+    if (score >= 4) return "bg-green-500/10 border-green-500/30";
+    if (score >= 3) return "bg-yellow-500/10 border-yellow-500/30";
+    return "bg-red-500/10 border-red-500/30";
+  };
+
+  const getScoreLabel = (score: number): string => {
+    if (score >= 4) return "Excellent";
+    if (score >= 3) return "Good";
+    if (score >= 2) return "Fair";
+    return "Needs Work";
   };
 
   const getScoreColor = (score: number): string => {
@@ -783,46 +886,279 @@ export function SpeechAnalysisResults({ data, onReset }: SpeechAnalysisResultsPr
 
         {activeTab === "insights" && (
           <div className="space-y-6">
-            <div className="prose prose-invert max-w-none">
-              <h4 className="text-lg font-medium text-[var(--text-primary)] mb-4">AI-Powered Feedback</h4>
-              <div className="p-4 bg-[var(--bg-tertiary)] rounded-lg whitespace-pre-wrap text-[var(--text-secondary)] leading-relaxed">
-                {data.summary}
+            {/* Overall Verdict Section */}
+            {data.insights?.overall_verdict && (
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[var(--accent-blue)]/20 via-purple-500/10 to-[var(--accent-blue-light)]/20 border border-[var(--accent-blue)]/30 p-6">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--accent-blue)]/20 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--accent-blue)] to-purple-500 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-lg font-semibold text-[var(--text-primary)]">The Verdict</h4>
+                    {data.verdict_audio && (
+                      <button
+                        onClick={playVerdictAudio}
+                        className={`ml-auto flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                          isPlayingVerdict
+                            ? "bg-[var(--accent-blue)] text-white"
+                            : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                        }`}
+                      >
+                        {isPlayingVerdict ? (
+                          <>
+                            <svg className="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                            Playing...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            </svg>
+                            Listen
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-[var(--text-primary)] text-base leading-relaxed">
+                    {data.insights.overall_verdict}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/30">
-                <h5 className="font-medium text-green-400 mb-2 flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Strengths
-                </h5>
-                <ul className="space-y-1 text-sm text-[var(--text-secondary)]">
-                  {analysis.idealPercentage > 60 && <li>Good overall speaking pace</li>}
-                  {analysis.fillerPercentage < 3 && <li>Minimal use of filler words</li>}
-                  {analysis.loudnessVariance < 5 && <li>Consistent volume throughout</li>}
-                  {analysis.totalWords > 100 && <li>Substantial content delivered</li>}
-                  {analysis.avgSPM >= 130 && analysis.avgSPM <= 300 && <li>Ideal speaking rhythm</li>}
-                </ul>
-              </div>
+            {/* Modular Insight Cards */}
+            {data.insights && (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Clarity Card */}
+                {data.insights.clarity && (
+                  <div className={`rounded-xl border p-5 ${getScoreBgColor(data.insights.clarity.score)}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-[var(--text-primary)]">Clarity</h5>
+                      </div>
+                      <div className={`px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r ${getScoreGradient(data.insights.clarity.score)} text-white`}>
+                        {data.insights.clarity.score}/5
+                      </div>
+                    </div>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">{data.insights.clarity.insight}</p>
+                    <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                      <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <p className="text-xs text-[var(--text-tertiary)]">{data.insights.clarity.action}</p>
+                    </div>
+                  </div>
+                )}
 
-              <div className="p-4 bg-orange-500/10 rounded-lg border border-orange-500/30">
-                <h5 className="font-medium text-orange-400 mb-2 flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  Areas for Improvement
-                </h5>
-                <ul className="space-y-1 text-sm text-[var(--text-secondary)]">
-                  {analysis.fillerPercentage >= 3 && <li>Reduce filler words ({analysis.fillerCount} detected)</li>}
-                  {analysis.avgSPM < 130 && <li>Consider speaking slightly faster</li>}
-                  {analysis.avgSPM > 400 && <li>Slow down for better comprehension</li>}
-                  {analysis.loudnessVariance >= 10 && <li>Work on maintaining consistent volume</li>}
-                  {analysis.idealPercentage < 50 && <li>Aim for more consistent pacing</li>}
-                </ul>
+                {/* Pacing Card */}
+                {data.insights.pacing && (
+                  <div className={`rounded-xl border p-5 ${getScoreBgColor(data.insights.pacing.score)}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-[var(--text-primary)]">Pacing</h5>
+                      </div>
+                      <div className={`px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r ${getScoreGradient(data.insights.pacing.score)} text-white`}>
+                        {data.insights.pacing.score}/5
+                      </div>
+                    </div>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">{data.insights.pacing.insight}</p>
+                    <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                      <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <p className="text-xs text-[var(--text-tertiary)]">{data.insights.pacing.action}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Filler Words Card */}
+                {data.insights.filler_words && (
+                  <div className={`rounded-xl border p-5 ${getScoreBgColor(data.insights.filler_words.score)}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-[var(--text-primary)]">Filler Words</h5>
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">
+                          {data.insights.filler_words.count} found
+                        </span>
+                      </div>
+                      <div className={`px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r ${getScoreGradient(data.insights.filler_words.score)} text-white`}>
+                        {data.insights.filler_words.score}/5
+                      </div>
+                    </div>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">{data.insights.filler_words.insight}</p>
+                    <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                      <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <p className="text-xs text-[var(--text-tertiary)]">{data.insights.filler_words.action}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Structure Card */}
+                {data.insights.structure && (
+                  <div className={`rounded-xl border p-5 ${getScoreBgColor(data.insights.structure.score)}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-[var(--text-primary)]">Structure</h5>
+                      </div>
+                      <div className={`px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r ${getScoreGradient(data.insights.structure.score)} text-white`}>
+                        {data.insights.structure.score}/5
+                      </div>
+                    </div>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">{data.insights.structure.insight}</p>
+                    <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                      <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <p className="text-xs text-[var(--text-tertiary)]">{data.insights.structure.action}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Engagement Card */}
+                {data.insights.engagement && (
+                  <div className={`rounded-xl border p-5 ${getScoreBgColor(data.insights.engagement.score)}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-[var(--text-primary)]">Engagement</h5>
+                      </div>
+                      <div className={`px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r ${getScoreGradient(data.insights.engagement.score)} text-white`}>
+                        {data.insights.engagement.score}/5
+                      </div>
+                    </div>
+                    <p className="text-sm text-[var(--text-secondary)] mb-3">{data.insights.engagement.insight}</p>
+                    <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
+                      <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <p className="text-xs text-[var(--text-tertiary)]">{data.insights.engagement.action}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
+
+            {/* Hear Improved Pitch Section */}
+            {audioFile && data.insights && (
+              <div className="mt-8 p-6 bg-gradient-to-br from-purple-500/10 to-[var(--accent-blue)]/10 rounded-xl border border-purple-500/20">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-lg font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                      <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                      </svg>
+                      Hear Your Improved Pitch
+                    </h4>
+                    <p className="text-sm text-[var(--text-tertiary)] mt-1">
+                      Generate an AI-improved version of your pitch in your own voice
+                    </p>
+                  </div>
+                  {!improvedPitchAudio ? (
+                    <button
+                      onClick={handleGenerateImprovedPitch}
+                      disabled={isGeneratingImproved}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
+                        isGeneratingImproved
+                          ? "bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-wait"
+                          : "bg-gradient-to-r from-purple-500 to-[var(--accent-blue)] text-white hover:opacity-90 shadow-lg shadow-purple-500/20"
+                      }`}
+                    >
+                      {isGeneratingImproved ? (
+                        <>
+                          <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Generate Improved Pitch
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={playImprovedPitch}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
+                        isPlayingImproved
+                          ? "bg-purple-500 text-white"
+                          : "bg-gradient-to-r from-purple-500 to-[var(--accent-blue)] text-white hover:opacity-90 shadow-lg shadow-purple-500/20"
+                      }`}
+                    >
+                      {isPlayingImproved ? (
+                        <>
+                          <svg className="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                          Playing...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Play Again
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+
+                {/* Error State */}
+                {improvedPitchError && (
+                  <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                    <p className="text-sm text-red-400">{improvedPitchError}</p>
+                  </div>
+                )}
+
+                {/* Improved Pitch Text */}
+                {improvedPitchText && (
+                  <div className="mt-4 p-4 bg-[var(--bg-tertiary)] rounded-lg">
+                    <h5 className="text-sm font-medium text-[var(--text-secondary)] mb-2">Improved Script:</h5>
+                    <p className="text-[var(--text-primary)] leading-relaxed">{improvedPitchText}</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

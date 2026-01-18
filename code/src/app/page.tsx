@@ -32,7 +32,9 @@ export default function Home() {
   const [description, setDescription] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
-  const [audioResult, setAudioResult] = useState<AudioAnalysisResponse | null>(null);
+  const [audioResult, setAudioResult] = useState<AudioAnalysisResponse | null>(
+    null,
+  );
   const [pdfResult, setPdfResult] = useState<PDFAnalysisResponse | null>(null);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [analysisProgress, setAnalysisProgress] = useState(0);
@@ -41,7 +43,9 @@ export default function Home() {
 
   // Recording state
   const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
-  const [audioInputMode, setAudioInputMode] = useState<"upload" | "record">("upload");
+  const [audioInputMode, setAudioInputMode] = useState<"upload" | "record">(
+    "upload",
+  );
 
   // Theme management
   const [isDark, setIsDark] = useState(true);
@@ -49,9 +53,9 @@ export default function Home() {
   // Apply theme class to document
   useEffect(() => {
     if (isDark) {
-      document.documentElement.classList.remove('light');
+      document.documentElement.classList.remove("light");
     } else {
-      document.documentElement.classList.add('light');
+      document.documentElement.classList.add("light");
     }
   }, [isDark]);
 
@@ -63,60 +67,75 @@ export default function Home() {
   const validateFile = (file: File): boolean => {
     const isAudioType = audioTypes.includes(file.type);
     const isAudioExtension = audioExtensions.some((ext) =>
-      file.name.toLowerCase().endsWith(ext)
+      file.name.toLowerCase().endsWith(ext),
     );
     const isPdfType = pdfTypes.includes(file.type);
     const isPdfExtension = pdfExtensions.some((ext) =>
-      file.name.toLowerCase().endsWith(ext)
+      file.name.toLowerCase().endsWith(ext),
     );
     return isAudioType || isAudioExtension || isPdfType || isPdfExtension;
   };
 
   const getFileType = (file: File): FileType => {
-    if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+    if (
+      file.type === "application/pdf" ||
+      file.name.toLowerCase().endsWith(".pdf")
+    ) {
       return "pdf";
     }
-    if (file.type.startsWith("audio/") || file.name.toLowerCase().endsWith(".mp3") || file.name.toLowerCase().endsWith(".wav")) {
+    if (
+      file.type.startsWith("audio/") ||
+      file.name.toLowerCase().endsWith(".mp3") ||
+      file.name.toLowerCase().endsWith(".wav")
+    ) {
       return "audio";
     }
     return "video";
   };
 
-  const handleFiles = useCallback((fileList: FileList) => {
-    const newFiles: FileWithPreview[] = [];
+  const handleFiles = useCallback(
+    (fileList: FileList) => {
+      const newFiles: FileWithPreview[] = [];
 
-    Array.from(fileList).forEach((file) => {
-      if (validateFile(file)) {
-        const fileType = getFileType(file);
-        // Check if we already have a file of this category (audio/video or pdf)
-        const existingAudioVideo = files.find(f => f.type === "audio" || f.type === "video");
-        const existingPdf = files.find(f => f.type === "pdf");
+      Array.from(fileList).forEach((file) => {
+        if (validateFile(file)) {
+          const fileType = getFileType(file);
+          // Check if we already have a file of this category (audio/video or pdf)
+          const existingAudioVideo = files.find(
+            (f) => f.type === "audio" || f.type === "video",
+          );
+          const existingPdf = files.find((f) => f.type === "pdf");
 
-        // Only add if we don't already have a file of this category
-        if ((fileType === "pdf" && !existingPdf) ||
-            ((fileType === "audio" || fileType === "video") && !existingAudioVideo)) {
-          newFiles.push({
-            file,
-            id: `${file.name}-${Date.now()}-${Math.random()}`,
-            type: fileType,
-          });
+          // Only add if we don't already have a file of this category
+          if (
+            (fileType === "pdf" && !existingPdf) ||
+            ((fileType === "audio" || fileType === "video") &&
+              !existingAudioVideo)
+          ) {
+            newFiles.push({
+              file,
+              id: `${file.name}-${Date.now()}-${Math.random()}`,
+              type: fileType,
+            });
 
-          // Create audio URL for playback if it's an audio/video file
-          if (fileType === "audio" || fileType === "video") {
-            const audioUrl = URL.createObjectURL(file);
-            setRecordedAudioUrl(audioUrl);
+            // Create audio URL for playback if it's an audio/video file
+            if (fileType === "audio" || fileType === "video") {
+              const audioUrl = URL.createObjectURL(file);
+              setRecordedAudioUrl(audioUrl);
+            }
           }
         }
-      }
-    });
+      });
 
-    if (newFiles.length > 0) {
-      setFiles((prev) => [...prev, ...newFiles]);
-      setAnalysisComplete(false);
-      setAudioResult(null);
-      setPdfResult(null);
-    }
-  }, [files]);
+      if (newFiles.length > 0) {
+        setFiles((prev) => [...prev, ...newFiles]);
+        setAnalysisComplete(false);
+        setAudioResult(null);
+        setPdfResult(null);
+      }
+    },
+    [files],
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -136,7 +155,7 @@ export default function Home() {
         handleFiles(e.dataTransfer.files);
       }
     },
-    [handleFiles]
+    [handleFiles],
   );
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +170,9 @@ export default function Home() {
 
   const handleRecordingComplete = (file: File, audioUrl: string) => {
     // Remove any existing audio/video file
-    setFiles((prev) => prev.filter((f) => f.type !== "audio" && f.type !== "video"));
+    setFiles((prev) =>
+      prev.filter((f) => f.type !== "audio" && f.type !== "video"),
+    );
 
     // Add the recorded file
     const newFile: FileWithPreview = {
@@ -167,7 +188,9 @@ export default function Home() {
 
   const clearRecording = () => {
     setRecordedAudioUrl(null);
-    setFiles((prev) => prev.filter((f) => f.type !== "audio" && f.type !== "video"));
+    setFiles((prev) =>
+      prev.filter((f) => f.type !== "audio" && f.type !== "video"),
+    );
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -177,8 +200,10 @@ export default function Home() {
   };
 
   // Get files by category
-  const audioVideoFile = files.find(f => f.type === "audio" || f.type === "video");
-  const pdfFile = files.find(f => f.type === "pdf");
+  const audioVideoFile = files.find(
+    (f) => f.type === "audio" || f.type === "video",
+  );
+  const pdfFile = files.find((f) => f.type === "pdf");
 
   const handleAnalyze = async () => {
     if (files.length === 0) return;
@@ -245,7 +270,7 @@ export default function Home() {
       setAnalysisError(
         error instanceof Error
           ? error.message
-          : "Failed to analyze the file. Please try again."
+          : "Failed to analyze the file. Please try again.",
       );
     } finally {
       setIsAnalyzing(false);
@@ -269,21 +294,51 @@ export default function Home() {
   const getFileIcon = (type: FileType) => {
     if (type === "pdf") {
       return (
-        <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        <svg
+          className="w-6 h-6 text-red-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+          />
         </svg>
       );
     }
     if (type === "audio") {
       return (
-        <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+        <svg
+          className="w-6 h-6 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+          />
         </svg>
       );
     }
     return (
-      <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      <svg
+        className="w-6 h-6 text-blue-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+        />
       </svg>
     );
   };
@@ -302,7 +357,14 @@ export default function Home() {
         navItems={[
           { label: "Home", onClick: () => router.push("/") },
           { label: "Learn More", onClick: () => router.push("/learn-more") },
-          { label: "Analyze", onClick: () => { document.getElementById('analyze')?.scrollIntoView({ behavior: 'smooth' }); } },
+          {
+            label: "Analyze",
+            onClick: () => {
+              document
+                .getElementById("analyze")
+                ?.scrollIntoView({ behavior: "smooth" });
+            },
+          },
         ]}
         onThemeToggle={() => setIsDark(!isDark)}
         isDarkMode={isDark}
@@ -320,8 +382,8 @@ export default function Home() {
               Analyze Your Presentation
             </h2>
             <p className="text-[var(--text-secondary)] max-w-xl mx-auto">
-              Upload your audio recording, slide deck, or both to receive comprehensive
-              AI-powered feedback on your presentation.
+              Upload your audio recording, slide deck, or both to receive
+              comprehensive AI-powered feedback on your presentation.
             </p>
           </div>
 
@@ -373,9 +435,10 @@ export default function Home() {
                     <div
                       onClick={() => {
                         if (!audioVideoFile) {
-                          const input = document.createElement('input');
-                          input.type = 'file';
-                          input.accept = '.mp3,.mp4,.wav,audio/mpeg,audio/wav,video/mp4';
+                          const input = document.createElement("input");
+                          input.type = "file";
+                          input.accept =
+                            ".mp3,.mp4,.wav,audio/mpeg,audio/wav,video/mp4";
                           input.onchange = (e) => {
                             const files = (e.target as HTMLInputElement).files;
                             if (files) handleFiles(files);
@@ -388,11 +451,12 @@ export default function Home() {
                       onDrop={handleDrop}
                       className={`
                         relative rounded-xl border-2 border-dashed transition-all duration-200 p-6
-                        ${audioVideoFile
-                          ? "border-green-500/50 bg-green-500/5 cursor-default"
-                          : isDragging
-                            ? "border-[var(--accent-blue)] bg-[var(--accent-blue-subtle)] cursor-pointer"
-                            : "border-[var(--border-secondary)] bg-[var(--bg-secondary)] hover:border-[var(--border-focus)] hover:bg-[var(--bg-tertiary)] cursor-pointer"
+                        ${
+                          audioVideoFile
+                            ? "border-green-500/50 bg-green-500/5 cursor-default"
+                            : isDragging
+                              ? "border-[var(--accent-blue)] bg-[var(--accent-blue-subtle)] cursor-pointer"
+                              : "border-[var(--border-secondary)] bg-[var(--bg-secondary)] hover:border-[var(--border-focus)] hover:bg-[var(--bg-tertiary)] cursor-pointer"
                         }
                       `}
                     >
@@ -406,7 +470,8 @@ export default function Home() {
                               {audioVideoFile.file.name}
                             </p>
                             <p className="text-xs text-[var(--text-tertiary)]">
-                              {formatFileSize(audioVideoFile.file.size)} • {getFileTypeLabel(audioVideoFile.type)}
+                              {formatFileSize(audioVideoFile.file.size)} •{" "}
+                              {getFileTypeLabel(audioVideoFile.type)}
                             </p>
                           </div>
                           <button
@@ -417,16 +482,36 @@ export default function Home() {
                             }}
                             className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--error)] hover:bg-[var(--error-subtle)] transition-colors"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
                             </svg>
                           </button>
                         </div>
                       ) : (
                         <div className="text-center">
                           <div className="mx-auto w-12 h-12 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center mb-3">
-                            <svg className="w-6 h-6 text-[var(--accent-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            <svg
+                              className="w-6 h-6 text-[var(--accent-blue)]"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                              />
                             </svg>
                           </div>
                           <p className="text-[var(--text-primary)] font-medium text-sm mb-1">
@@ -453,8 +538,18 @@ export default function Home() {
                     <div className="rounded-xl border-2 border-green-500/50 bg-green-500/5 p-6">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                          <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-5 h-5 text-green-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                         </div>
                         <div className="flex-1 min-w-0">
@@ -462,15 +557,26 @@ export default function Home() {
                             Recording saved
                           </p>
                           <p className="text-xs text-[var(--text-tertiary)]">
-                            {formatFileSize(audioVideoFile.file.size)} • Ready to analyze
+                            {formatFileSize(audioVideoFile.file.size)} • Ready
+                            to analyze
                           </p>
                         </div>
                         <button
                           onClick={clearRecording}
                           className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--error)] hover:bg-[var(--error-subtle)] transition-colors"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -479,7 +585,9 @@ export default function Home() {
 
                   {/* Optional label */}
                   {!audioVideoFile && (
-                    <p className="text-xs text-center text-[var(--text-muted)]">Optional</p>
+                    <p className="text-xs text-center text-[var(--text-muted)]">
+                      Optional
+                    </p>
                   )}
                 </div>
 
@@ -487,9 +595,9 @@ export default function Home() {
                 <div
                   onClick={() => {
                     if (!pdfFile) {
-                      const input = document.createElement('input');
-                      input.type = 'file';
-                      input.accept = '.pdf,application/pdf';
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = ".pdf,application/pdf";
                       input.onchange = (e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files) handleFiles(files);
@@ -502,11 +610,12 @@ export default function Home() {
                   onDrop={handleDrop}
                   className={`
                     relative rounded-xl border-2 border-dashed transition-all duration-200 p-6
-                    ${pdfFile
-                      ? "border-green-500/50 bg-green-500/5 cursor-default"
-                      : isDragging
-                        ? "border-[var(--accent-blue)] bg-[var(--accent-blue-subtle)] cursor-pointer"
-                        : "border-[var(--border-secondary)] bg-[var(--bg-secondary)] hover:border-[var(--border-focus)] hover:bg-[var(--bg-tertiary)] cursor-pointer"
+                    ${
+                      pdfFile
+                        ? "border-green-500/50 bg-green-500/5 cursor-default"
+                        : isDragging
+                          ? "border-[var(--accent-blue)] bg-[var(--accent-blue-subtle)] cursor-pointer"
+                          : "border-[var(--border-secondary)] bg-[var(--bg-secondary)] hover:border-[var(--border-focus)] hover:bg-[var(--bg-tertiary)] cursor-pointer"
                     }
                   `}
                 >
@@ -530,16 +639,36 @@ export default function Home() {
                         }}
                         className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--error)] hover:bg-[var(--error-subtle)] transition-colors"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
                   ) : (
                     <div className="text-center">
                       <div className="mx-auto w-12 h-12 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center mb-3">
-                        <svg className="w-6 h-6 text-[var(--accent-blue-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <svg
+                          className="w-6 h-6 text-[var(--accent-blue-light)]"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
                         </svg>
                       </div>
                       <p className="text-[var(--text-primary)] font-medium text-sm mb-1">
@@ -569,15 +698,28 @@ export default function Home() {
               {/* Upload Status */}
               {files.length > 0 && (
                 <div className="mt-4 flex items-center gap-2 text-sm">
-                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-4 h-4 text-green-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   <span className="text-[var(--text-secondary)]">
                     {files.length === 1
                       ? `1 file ready`
                       : `${files.length} files ready`}
                     {audioVideoFile && pdfFile && (
-                      <span className="text-[var(--text-muted)]"> (speech + slides)</span>
+                      <span className="text-[var(--text-muted)]">
+                        {" "}
+                        (speech + slides)
+                      </span>
                     )}
                   </span>
                 </div>
@@ -649,22 +791,36 @@ export default function Home() {
               {!analysisComplete && !isAnalyzing && files.length > 0 && (
                 <div className="mb-4 p-4 rounded-lg border bg-[var(--accent-blue-subtle)] border-[var(--accent-blue)]/20">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 mt-0.5 text-[var(--accent-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-5 h-5 mt-0.5 text-[var(--accent-blue)]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <div className="text-sm text-[var(--text-secondary)] space-y-2">
-                      <p className="font-medium text-[var(--text-primary)]">What you&apos;ll receive:</p>
+                      <p className="font-medium text-[var(--text-primary)]">
+                        What you&apos;ll receive:
+                      </p>
                       <ul className="space-y-1">
                         {audioVideoFile && (
                           <li className="flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-blue)]"></span>
-                            <strong>Speech Analysis:</strong> Pace, filler words, volume consistency, and AI feedback
+                            <strong>Speech Analysis:</strong> Pace, filler
+                            words, volume consistency, and AI feedback
                           </li>
                         )}
                         {pdfFile && (
                           <li className="flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-blue-light)]"></span>
-                            <strong>Slide Analysis:</strong> Content structure, text density, clarity, and AI suggestions
+                            <strong>Slide Analysis:</strong> Content structure,
+                            text density, clarity, and AI suggestions
                           </li>
                         )}
                       </ul>
@@ -690,7 +846,9 @@ export default function Home() {
                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                       />
                     </svg>
-                    <p className="text-[var(--error)] text-sm flex-1">{analysisError}</p>
+                    <p className="text-[var(--error)] text-sm flex-1">
+                      {analysisError}
+                    </p>
                     <button
                       onClick={() => setAnalysisError(null)}
                       className="p-1 rounded hover:bg-[var(--error)]/10 transition-colors"
@@ -834,8 +992,18 @@ export default function Home() {
                     onClick={handleReset}
                     className="px-4 py-2 rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors text-sm font-medium flex items-center gap-2"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
                     </svg>
                     New Analysis
                   </button>
@@ -847,27 +1015,44 @@ export default function Home() {
                     {pdfResult && (
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-6 h-6 rounded-full bg-[var(--accent-blue)]/20 flex items-center justify-center">
-                          <svg className="w-3.5 h-3.5 text-[var(--accent-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                          <svg
+                            className="w-3.5 h-3.5 text-[var(--accent-blue)]"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                            />
                           </svg>
                         </div>
-                        <h4 className="text-lg font-medium text-[var(--text-primary)]">Speech Analysis</h4>
+                        <h4 className="text-lg font-medium text-[var(--text-primary)]">
+                          Speech Analysis
+                        </h4>
                       </div>
                     )}
 
                     {/* Karaoke Playback - shows when we have audio URL and analysis */}
-                    {recordedAudioUrl && audioResult.word_analysis.length > 0 && (
-                      <div className="mb-6">
-                        <KaraokePlayback
-                          audioUrl={recordedAudioUrl}
-                          wordAnalysis={audioResult.word_analysis}
-                          transcription={audioResult.transcription}
-                          timestamps={audioResult.timestamps}
-                        />
-                      </div>
-                    )}
+                    {recordedAudioUrl &&
+                      audioResult.word_analysis.length > 0 && (
+                        <div className="mb-6">
+                          <KaraokePlayback
+                            audioUrl={recordedAudioUrl}
+                            wordAnalysis={audioResult.word_analysis}
+                            transcription={audioResult.transcription}
+                            timestamps={audioResult.timestamps}
+                          />
+                        </div>
+                      )}
 
-                    <SpeechAnalysisResults data={audioResult} onReset={handleReset} />
+                    <SpeechAnalysisResults
+                      data={audioResult}
+                      onReset={handleReset}
+                      audioFile={audioVideoFile?.file}
+                    />
                   </div>
                 )}
 
@@ -877,14 +1062,29 @@ export default function Home() {
                     {audioResult && (
                       <div className="flex items-center gap-2 mb-4 mt-8">
                         <div className="w-6 h-6 rounded-full bg-[var(--accent-blue-light)]/20 flex items-center justify-center">
-                          <svg className="w-3.5 h-3.5 text-[var(--accent-blue-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          <svg
+                            className="w-3.5 h-3.5 text-[var(--accent-blue-light)]"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
                           </svg>
                         </div>
-                        <h4 className="text-lg font-medium text-[var(--text-primary)]">Slide Deck Analysis</h4>
+                        <h4 className="text-lg font-medium text-[var(--text-primary)]">
+                          Slide Deck Analysis
+                        </h4>
                       </div>
                     )}
-                    <PDFAnalysisResults data={pdfResult} onReset={handleReset} />
+                    <PDFAnalysisResults
+                      data={pdfResult}
+                      onReset={handleReset}
+                    />
                   </div>
                 )}
               </section>
