@@ -224,7 +224,7 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
 
   if (permissionDenied) {
     return (
-      <div className="p-4 rounded-xl bg-[var(--error-subtle)] border border-[var(--error)]/30">
+      <div className="p-4 rounded bg-[var(--error-subtle)] border border-[var(--error)]/30">
         <div className="flex items-center gap-3">
           <svg className="w-5 h-5 text-[var(--error)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -238,7 +238,7 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
         </div>
         <button
           onClick={() => setPermissionDenied(false)}
-          className="mt-3 text-sm text-[var(--accent-blue)] hover:underline"
+          className="mt-3 text-sm text-[var(--accent-primary)] hover:underline"
         >
           Try again
         </button>
@@ -254,16 +254,16 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
           onClick={startRecording}
           disabled={disabled}
           className={`
-            w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl
+            w-full flex items-center justify-center gap-3 px-6 py-4 rounded
             transition-all duration-200 font-medium
             ${disabled
               ? "bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed"
-              : "bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] border border-[var(--accent-blue)]/30 hover:bg-[var(--accent-blue)]/20 hover:border-[var(--accent-blue)]/50"
+              : "bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 hover:bg-[var(--accent-primary)]/20 hover:border-[var(--accent-primary)]/50"
             }
           `}
         >
-          <div className="w-10 h-10 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 rounded-full bg-[var(--accent-primary)] flex items-center justify-center">
+            <svg className="w-5 h-5 text-[var(--bg-primary)]" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
@@ -271,7 +271,7 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
           <span>Start Recording</span>
         </button>
       ) : (
-        <div className="p-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-primary)]">
+        <div className="p-4 rounded bg-[var(--bg-secondary)] border border-[var(--border-primary)]">
           {/* Recording Indicator & Timer */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -295,7 +295,7 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
                   key={i}
                   className={`w-2 rounded-full transition-all duration-75 ${
                     isActive
-                      ? "bg-[var(--accent-blue)]"
+                      ? "bg-[var(--accent-primary)]"
                       : "bg-[var(--border-secondary)]"
                   }`}
                   style={{
@@ -323,7 +323,7 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
             {/* Pause/Resume Button */}
             <button
               onClick={pauseRecording}
-              className="p-3 rounded-full bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--accent-blue)] transition-colors"
+              className="p-3 rounded-full bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--accent-primary)] transition-colors"
               title={isPaused ? "Resume" : "Pause"}
             >
               {isPaused ? (
@@ -340,7 +340,7 @@ export function AudioRecorder({ onRecordingComplete, disabled }: AudioRecorderPr
             {/* Stop Button */}
             <button
               onClick={stopRecording}
-              className="p-4 rounded-full bg-[var(--accent-blue)] text-white hover:bg-[var(--accent-blue-hover)] transition-colors shadow-lg shadow-[var(--accent-blue)]/30"
+              className="p-4 rounded-full bg-red-500 text-white hover:bg-red-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-red-500/30"
               title="Stop & Save"
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">

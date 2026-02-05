@@ -1,21 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Navbar } from "@/app/components/Navbar";
+import { InteractiveBackground } from "@/app/components/InteractiveBackground";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTheme } from "@/app/components/ThemeContext";
 
 export default function LearnMore() {
   const router = useRouter();
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.remove('light');
-    } else {
-      document.documentElement.classList.add('light');
-    }
-  }, [isDark]);
+  const { isDark, toggleTheme } = useTheme();
 
   const features = [
     {
@@ -89,130 +82,136 @@ export default function LearnMore() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] pt-24 transition-colors duration-300">
-      {/* Navbar */}
-      <Navbar
-        brandName="Pitch Perfect"
-        navItems={[
-          { label: "Home", onClick: () => router.push("/") },
-          { label: "Learn More", onClick: () => router.push("/learn-more") },
-          { label: "Analyze", onClick: () => router.push("/#analyze") },
-        ]}
-        onThemeToggle={() => setIsDark(!isDark)}
-        isDarkMode={isDark}
-      />
+    <div className="min-h-screen bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
+      {/* Interactive Background */}
+      <InteractiveBackground />
 
-      {/* Hero Section */}
-      <section className="px-6 py-16 max-w-5xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/20 mb-6">
-            <svg className="w-4 h-4 text-[var(--accent-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-sm text-[var(--accent-blue)] font-medium">How It Works</span>
+      {/* Content Layer */}
+      <div className="relative z-10 pt-24">
+        {/* Navbar */}
+        <Navbar
+          brandName="Pitch Perfect"
+          navItems={[
+            { label: "Home", onClick: () => router.push("/") },
+            { label: "Learn More", onClick: () => router.push("/learn-more") },
+            { label: "Analyze", onClick: () => router.push("/#analyze") },
+          ]}
+          onThemeToggle={toggleTheme}
+          isDarkMode={isDark}
+        />
+
+        {/* Hero Section */}
+        <section className="px-6 py-16 max-w-5xl mx-auto">
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-blue-subtle)] border border-[var(--accent-blue)]/30 mb-6">
+              <svg className="w-4 h-4 text-[var(--accent-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-sm text-[var(--accent-blue)] font-medium">How It Works</span>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-6">
+              Master Your Presentations with{" "}
+              <span className="underline decoration-2 underline-offset-4">
+                AI Coaching
+              </span>
+            </h1>
+
+            <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
+              Pitch Perfect analyzes your speech recordings and slide decks to provide
+              personalized feedback that helps you become a more confident and effective presenter.
+            </p>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-6">
-            Master Your Presentations with{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-blue-lighter)]">
-              AI Coaching
-            </span>
-          </h1>
-
-          <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
-            Pitch Perfect analyzes your speech recordings and slide decks to provide
-            personalized feedback that helps you become a more confident and effective presenter.
-          </p>
-        </div>
-
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-20">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-primary)] hover:border-[var(--accent-blue)]/50 transition-all duration-300 animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="w-14 h-14 rounded-xl bg-[var(--accent-blue)]/10 flex items-center justify-center text-[var(--accent-blue)] mb-4">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-[var(--text-secondary)] mb-4">
-                {feature.description}
-              </p>
-              <ul className="space-y-2">
-                {feature.bullets.map((bullet, bulletIndex) => (
-                  <li key={bulletIndex} className="flex items-start gap-2 text-sm text-[var(--text-tertiary)]">
-                    <svg className="w-4 h-4 mt-0.5 text-[var(--accent-blue)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* How It Works Steps */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-[var(--text-primary)] text-center mb-12">
-            Simple 4-Step Process
-          </h2>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            {steps.map((step, index) => (
-              <div key={index} className="relative animate-fade-in" style={{ animationDelay: `${index * 0.15}s` }}>
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-[calc(50%+40px)] w-[calc(100%-80px)] h-0.5 bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-blue-light)]" />
-                )}
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-blue-light)] flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg shadow-[var(--accent-blue)]/30">
-                    {step.number}
-                  </div>
-                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-[var(--text-secondary)]">
-                    {step.description}
-                  </p>
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mb-20">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-primary)] hover:border-[var(--accent-blue)] hover:shadow-lg hover:shadow-[var(--accent-blue-subtle)] transition-all duration-300 animate-fade-in group"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="w-14 h-14 rounded-xl bg-[var(--accent-primary-subtle)] group-hover:bg-[var(--accent-blue-subtle)] flex items-center justify-center text-[var(--text-primary)] group-hover:text-[var(--accent-blue)] mb-4 transition-all duration-300">
+                  {feature.icon}
                 </div>
+                <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-[var(--text-secondary)] mb-4">
+                  {feature.description}
+                </p>
+                <ul className="space-y-2">
+                  {feature.bullets.map((bullet, bulletIndex) => (
+                    <li key={bulletIndex} className="flex items-start gap-2 text-sm text-[var(--text-tertiary)]">
+                      <svg className="w-4 h-4 mt-0.5 text-[var(--accent-blue)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* CTA Section */}
-        <div className="text-center p-10 rounded-2xl bg-gradient-to-r from-[var(--accent-blue)]/10 to-[var(--accent-blue-light)]/10 border border-[var(--accent-blue)]/20">
-          <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-4">
-            Ready to Perfect Your Pitch?
-          </h2>
-          <p className="text-[var(--text-secondary)] mb-8 max-w-xl mx-auto">
-            Start analyzing your presentations today and discover how AI-powered coaching
-            can transform your public speaking skills.
-          </p>
-          <Link
-            href="/#analyze"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-[var(--accent-blue)] text-white font-semibold hover:bg-[var(--accent-blue-hover)] transition-all duration-200 shadow-lg shadow-[var(--accent-blue)]/25 hover:shadow-xl hover:shadow-[var(--accent-blue)]/30 hover:-translate-y-0.5"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            Start Analyzing
-          </Link>
-        </div>
-      </section>
+          {/* How It Works Steps */}
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-[var(--text-primary)] text-center mb-12">
+              Simple 4-Step Process
+            </h2>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--border-primary)] mt-auto">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <p className="text-center text-sm text-[var(--text-muted)]">
-            Pitch Perfect - AI-powered presentation coaching
-          </p>
-        </div>
-      </footer>
+            <div className="grid md:grid-cols-4 gap-6">
+              {steps.map((step, index) => (
+                <div key={index} className="relative animate-fade-in group" style={{ animationDelay: `${index * 0.15}s` }}>
+                  {index < steps.length - 1 && (
+                    <div className="hidden md:block absolute top-8 left-[calc(50%+40px)] w-[calc(100%-80px)] h-0.5 bg-gradient-to-r from-[var(--accent-blue)]/50 to-[var(--border-secondary)]" />
+                  )}
+                  <div className="text-center">
+                    <div className="w-16 h-16 rounded-xl bg-[var(--accent-primary)] group-hover:bg-[var(--accent-blue)] flex items-center justify-center text-[var(--bg-primary)] text-2xl font-bold mx-auto mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[var(--accent-blue-subtle)]">
+                      {step.number}
+                    </div>
+                    <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm text-[var(--text-secondary)]">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center p-10 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-primary)] hover:border-[var(--accent-blue-muted)] transition-all duration-300">
+            <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-4">
+              Ready to Perfect Your Pitch?
+            </h2>
+            <p className="text-[var(--text-secondary)] mb-8 max-w-xl mx-auto">
+              Start analyzing your presentations today and discover how AI-powered coaching
+              can transform your public speaking skills.
+            </p>
+            <Link
+              href="/#analyze"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[var(--accent-primary)] text-[var(--bg-primary)] font-semibold hover:bg-[var(--accent-primary-hover)] hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Start Analyzing
+            </Link>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-t border-[var(--border-primary)] mt-auto">
+          <div className="max-w-4xl mx-auto px-6 py-6">
+            <p className="text-center text-sm text-[var(--text-muted)]">
+              Pitch Perfect - AI-powered presentation coaching
+            </p>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
