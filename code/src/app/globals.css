@@ -1,62 +1,79 @@
 @import "tailwindcss";
 
-/* Dark Theme (default) */
+/* Black & White Dark Theme (default) with muted blue accent */
 :root {
   --bg-primary: #0a0a0a;
   --bg-secondary: #141414;
-  --bg-tertiary: #1a1a1a;
-  --bg-elevated: #1f1f1f;
+  --bg-tertiary: #1f1f1f;
+  --bg-elevated: #1a1a1a;
   --bg-hover: #2a2a2a;
+  --bg-card: #111111;
 
-  --border-primary: #2a2a2a;
+  --border-primary: #222222;
   --border-secondary: #333333;
-  --border-focus: #3b82f6;
+  --border-focus: #ffffff;
 
   --text-primary: #ffffff;
-  --text-secondary: #a1a1a1;
-  --text-tertiary: #6b6b6b;
-  --text-muted: #525252;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #707070;
+  --text-muted: #505050;
 
-  --accent-blue: #3b82f6;
-  --accent-blue-hover: #2563eb;
-  --accent-blue-subtle: rgba(59, 130, 246, 0.1);
-  --accent-blue-glow: rgba(59, 130, 246, 0.25);
-  --accent-blue-light: #60a5fa;
-  --accent-blue-lighter: #93c5fd;
+  --accent-primary: #ffffff;
+  --accent-primary-hover: #e0e0e0;
+  --accent-primary-subtle: rgba(255, 255, 255, 0.1);
+  --accent-primary-glow: rgba(255, 255, 255, 0.2);
 
-  --success: #22c55e;
-  --success-subtle: rgba(34, 197, 94, 0.1);
+  /* Muted blue accent for hover states and highlights */
+  --accent-blue: #6b8afd;
+  --accent-blue-hover: #8aa2fd;
+  --accent-blue-subtle: rgba(107, 138, 253, 0.15);
+  --accent-blue-muted: #4a6cd4;
 
-  --error: #ef4444;
-  --error-subtle: rgba(239, 68, 68, 0.1);
+  --success: #4ade80;
+  --success-subtle: rgba(74, 222, 128, 0.1);
 
-  --navbar-bg: rgba(26, 26, 26, 0.7);
-  --navbar-border: rgba(255, 255, 255, 0.15);
+  --error: #f87171;
+  --error-subtle: rgba(248, 113, 113, 0.1);
+
+  --warning: #fbbf24;
+  --warning-subtle: rgba(251, 191, 36, 0.1);
+
+  --navbar-bg: rgba(10, 10, 10, 0.85);
+  --navbar-border: rgba(34, 34, 34, 0.6);
+
+  /* Background effect colors */
+  --particle-color: 255, 255, 255;
+  --glow-color: 255, 255, 255;
 }
 
-/* Light Theme */
+/* Black & White Light Theme with muted blue accent */
 .light {
   --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f5f5f5;
   --bg-elevated: #ffffff;
-  --bg-hover: #e2e8f0;
+  --bg-hover: #ebebeb;
+  --bg-card: #ffffff;
 
-  --border-primary: #e2e8f0;
-  --border-secondary: #cbd5e1;
-  --border-focus: #3b82f6;
+  --border-primary: #e5e5e5;
+  --border-secondary: #d4d4d4;
+  --border-focus: #000000;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --text-muted: #94a3b8;
+  --text-primary: #0a0a0a;
+  --text-secondary: #525252;
+  --text-tertiary: #737373;
+  --text-muted: #a3a3a3;
 
-  --accent-blue: #2563eb;
-  --accent-blue-hover: #1d4ed8;
-  --accent-blue-subtle: rgba(37, 99, 235, 0.1);
-  --accent-blue-glow: rgba(37, 99, 235, 0.25);
-  --accent-blue-light: #3b82f6;
-  --accent-blue-lighter: #60a5fa;
+  --accent-primary: #0a0a0a;
+  --accent-primary-hover: #262626;
+  --accent-primary-subtle: rgba(10, 10, 10, 0.08);
+  --accent-primary-glow: rgba(10, 10, 10, 0.15);
+
+  /* Muted blue accent for hover states and highlights */
+  --accent-blue: #4a6cd4;
+  --accent-blue-hover: #3d5cb8;
+  --accent-blue-subtle: rgba(74, 108, 212, 0.12);
+  --accent-blue-muted: #5a7ce0;
 
   --success: #16a34a;
   --success-subtle: rgba(22, 163, 74, 0.1);
@@ -64,8 +81,15 @@
   --error: #dc2626;
   --error-subtle: rgba(220, 38, 38, 0.1);
 
-  --navbar-bg: rgba(255, 255, 255, 0.8);
-  --navbar-border: rgba(0, 0, 0, 0.1);
+  --warning: #d97706;
+  --warning-subtle: rgba(217, 119, 6, 0.1);
+
+  --navbar-bg: rgba(255, 255, 255, 0.85);
+  --navbar-border: rgba(229, 229, 229, 0.6);
+
+  /* Background effect colors */
+  --particle-color: 0, 0, 0;
+  --glow-color: 0, 0, 0;
 }
 
 * {
@@ -84,7 +108,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -105,13 +129,13 @@ body {
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid var(--accent-blue);
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
 /* Selection */
 ::selection {
-  background-color: var(--accent-blue-subtle);
+  background-color: var(--accent-primary-subtle);
   color: var(--text-primary);
 }
 
@@ -119,7 +143,7 @@ body {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -127,54 +151,43 @@ body {
   }
 }
 
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px var(--accent-blue-glow);
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
   }
-  50% {
-    box-shadow: 0 0 40px var(--accent-blue-glow);
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
   }
-  100% {
-    background-position: 200% 0;
+  50% {
+    opacity: 0.5;
   }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
 .animate-fade-in-delay-1 {
-  animation: fadeIn 0.5s ease-out 0.1s forwards;
+  animation: fadeIn 0.4s ease-out 0.1s forwards;
   opacity: 0;
 }
 
 .animate-fade-in-delay-2 {
-  animation: fadeIn 0.5s ease-out 0.2s forwards;
+  animation: fadeIn 0.4s ease-out 0.2s forwards;
   opacity: 0;
 }
 
 .animate-fade-in-delay-3 {
-  animation: fadeIn 0.5s ease-out 0.3s forwards;
+  animation: fadeIn 0.4s ease-out 0.3s forwards;
   opacity: 0;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 /* Glass effect */
@@ -184,12 +197,429 @@ body {
   border: 1px solid var(--border-primary);
 }
 
+.light .glass {
+  background: rgba(255, 255, 255, 0.8);
+}
+
 /* Upload dropzone styles */
 .dropzone-active {
-  border-color: var(--accent-blue) !important;
-  background-color: var(--accent-blue-subtle) !important;
+  border-color: var(--accent-primary) !important;
+  background-color: var(--accent-primary-subtle) !important;
 }
 
 button {
   cursor: pointer;
+}
+
+/* Button interactive animations */
+.btn-interactive {
+  transition: all 0.15s ease-out;
+}
+
+.btn-interactive:hover {
+  transform: translateY(-1px);
+}
+
+.btn-interactive:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Primary button */
+.btn-primary {
+  transition: all 0.15s ease-out;
+  background-color: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Secondary button */
+.btn-secondary {
+  transition: all 0.15s ease-out;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Step card styling */
+.step-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.step-card:hover {
+  border-color: var(--border-secondary);
+}
+
+/* Segmented control */
+.segment-control {
+  display: inline-flex;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.segment-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.segment-btn:hover:not(.segment-btn-active) {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.segment-btn-active {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+/* Input styling */
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-subtle);
+}
+
+/* Dropzone styling */
+.dropzone {
+  border: 2px dashed var(--border-secondary);
+  border-radius: 12px;
+  padding: 32px;
+  background: var(--bg-card);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.dropzone:hover {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary-subtle);
+}
+
+.dropzone-filled {
+  border-style: solid;
+  border-color: var(--success);
+  background: var(--success-subtle);
+  cursor: default;
+}
+
+.dropzone-filled:hover {
+  border-color: var(--success);
+  background: var(--success-subtle);
+}
+
+/* ========================================
+   WIZARD FORM STYLES
+   ======================================== */
+
+/* Wizard container */
+.wizard-container {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-primary);
+  border-radius: 24px;
+  padding: 32px;
+}
+
+/* Wizard card (selection cards) */
+.wizard-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.wizard-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--accent-blue-subtle);
+}
+
+.wizard-card-selected {
+  background: var(--accent-blue-subtle);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 30px var(--accent-blue-subtle);
+}
+
+.wizard-card-selected:hover {
+  background: var(--accent-blue-subtle);
+  border-color: var(--accent-blue);
+}
+
+/* Wizard card vertical (for 2-column layout) */
+.wizard-card-vertical {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 28px 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-align: center;
+}
+
+.wizard-card-vertical:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--accent-blue-subtle);
+}
+
+.wizard-card-vertical.wizard-card-selected {
+  background: var(--accent-blue-subtle);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 30px var(--accent-blue-subtle);
+}
+
+/* Wizard dropzone */
+.wizard-dropzone {
+  border: 2px dashed var(--border-secondary);
+  border-radius: 16px;
+  padding: 48px 32px;
+  background: var(--bg-tertiary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-align: center;
+}
+
+.wizard-dropzone:hover {
+  border-color: var(--accent-blue);
+  background: var(--accent-blue-subtle);
+  box-shadow: 0 4px 20px var(--accent-blue-subtle);
+}
+
+.wizard-dropzone-active {
+  border-color: var(--accent-blue) !important;
+  background: var(--accent-blue-subtle) !important;
+  box-shadow: 0 0 30px var(--accent-blue-subtle);
+}
+
+/* Wizard file preview */
+.wizard-file-preview {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+/* Wizard recorder container */
+.wizard-recorder {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* Wizard input */
+.wizard-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.wizard-input::placeholder {
+  color: var(--text-muted);
+}
+
+.wizard-input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  background: var(--bg-secondary);
+  box-shadow: 0 0 0 3px var(--accent-blue-subtle);
+}
+
+/* ========================================
+   WIZARD ANIMATIONS
+   ======================================== */
+
+/* Slide animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Step content wrapper */
+.step-content {
+  min-height: 300px;
+}
+
+/* ========================================
+   BLUE ACCENT UTILITIES & HOVER EFFECTS
+   ======================================== */
+
+/* Text hover to blue */
+.hover-blue {
+  transition: color 0.2s ease;
+}
+
+.hover-blue:hover {
+  color: var(--accent-blue);
+}
+
+/* Link with blue hover */
+a {
+  transition: color 0.2s ease;
+}
+
+/* Icon hover effect */
+.icon-hover {
+  transition: all 0.2s ease;
+}
+
+.icon-hover:hover {
+  color: var(--accent-blue);
+  transform: scale(1.05);
+}
+
+/* Card with blue border on hover */
+.card-hover-blue {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover-blue:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 20px var(--accent-blue-subtle);
+}
+
+/* Button with blue glow */
+.btn-glow:hover {
+  box-shadow: 0 0 20px var(--accent-blue-subtle);
+}
+
+/* Progress bar accent */
+.progress-blue {
+  background: linear-gradient(90deg, var(--accent-blue-muted), var(--accent-blue));
+}
+
+/* Selection highlight with blue */
+::selection {
+  background-color: var(--accent-blue-subtle);
+  color: var(--text-primary);
+}
+
+/* Focus ring with blue */
+*:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }

@@ -153,11 +153,11 @@ export function KaraokePlayback({
   };
 
   return (
-    <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)] overflow-hidden">
+    <div className="bg-[var(--bg-secondary)] rounded border border-[var(--border-primary)] overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-[var(--border-primary)] flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent-blue)]/10 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-sm bg-[var(--accent-blue)]/10 flex items-center justify-center">
             <svg className="w-4 h-4 text-[var(--accent-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
             </svg>

@@ -9,23 +9,19 @@
   padding: 0.5rem 1.25rem;
   background-color: var(--navbar-bg);
   border: 1px solid var(--navbar-border);
-  border-radius: 12px;
+  border-radius: 4px;
   width: calc(100% - 3rem);
   max-width: 1080px;
   transition:
-    box-shadow 0.3s ease,
-    border-color 0.3s ease,
-    background-color 0.3s ease;
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
   z-index: 50;
   backdrop-filter: blur(10px);
 }
 
 .navbar:hover {
-  border-color: var(--accent-blue);
-  box-shadow:
-    0 0 20px var(--accent-blue-glow),
-    0 0 40px rgba(59, 130, 246, 0.2),
-    inset 0 0 20px rgba(59, 130, 246, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
@@ -44,14 +40,14 @@
   font-weight: 400;
   color: var(--text-primary);
   letter-spacing: 0.5px;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .brand-pitch,
 .brand-perfect {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--accent-blue);
+  color: var(--accent-primary);
 }
 
 .navbar-links {
@@ -63,15 +59,18 @@
 }
 
 .nav-link {
-  color: var(--text-primary);
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 400;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
 }
 
 .nav-link:hover {
   color: var(--accent-blue);
+  background-color: var(--accent-blue-subtle);
 }
 
 .theme-toggle {
@@ -83,12 +82,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease;
-  border-radius: 6px;
+  transition: all 0.15s ease;
+  border-radius: 2px;
 }
 
 .theme-toggle:hover {
   color: var(--accent-blue);
+  background-color: var(--accent-blue-subtle);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
 }
 
 .theme-toggle svg {

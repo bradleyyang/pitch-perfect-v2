@@ -200,7 +200,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
   return (
     <div className="animate-fade-in space-y-6">
       {/* Header with Score */}
-      <div className="bg-gradient-to-r from-[var(--accent-blue)]/20 to-[var(--accent-blue-light)]/20 rounded-2xl p-6 border border-[var(--accent-blue)]/30">
+      <div className="bg-gradient-to-r from-[var(--accent-primary)]/20 to-[var(--accent-primary)]/20 rounded p-6 border border-[var(--accent-primary)]/30">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <div className="relative">
@@ -246,7 +246,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
           </div>
           <button
             onClick={onReset}
-            className="px-4 py-2 rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors text-sm font-medium flex items-center gap-2"
+            className="px-4 py-2 rounded-sm bg-[var(--bg-tertiary)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors text-sm font-medium flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -258,9 +258,9 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[var(--bg-secondary)] rounded-xl p-4 border border-[var(--border-primary)]">
+        <div className="bg-[var(--bg-secondary)] rounded p-4 border border-[var(--border-primary)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-sm bg-blue-500/10 flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
@@ -274,9 +274,9 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl p-4 border border-[var(--border-primary)]">
+        <div className="bg-[var(--bg-secondary)] rounded p-4 border border-[var(--border-primary)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-sm bg-blue-500/10 flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </svg>
@@ -290,9 +290,9 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl p-4 border border-[var(--border-primary)]">
+        <div className="bg-[var(--bg-secondary)] rounded p-4 border border-[var(--border-primary)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-sm bg-green-500/10 flex items-center justify-center">
               <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
@@ -308,9 +308,9 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-secondary)] rounded-xl p-4 border border-[var(--border-primary)]">
+        <div className="bg-[var(--bg-secondary)] rounded p-4 border border-[var(--border-primary)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-sm bg-cyan-500/10 flex items-center justify-center">
               <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
@@ -331,9 +331,9 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-sm font-medium transition-all whitespace-nowrap ${
               activeTab === tab.id
-                ? "bg-[var(--accent-blue)] text-white"
+                ? "bg-[var(--accent-primary)] text-white"
                 : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]"
             }`}
           >
@@ -344,7 +344,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)] p-6">
+      <div className="bg-[var(--bg-secondary)] rounded border border-[var(--border-primary)] p-6">
         {activeTab === "overview" && (
           <div className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
@@ -409,7 +409,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
             <div>
               <h4 className="text-lg font-medium text-[var(--text-primary)] mb-4">Score Breakdown</h4>
               <div className="grid grid-cols-3 gap-4">
-                <div className="p-4 rounded-lg border border-[var(--border-primary)] bg-[var(--bg-tertiary)]">
+                <div className="p-4 rounded-sm border border-[var(--border-primary)] bg-[var(--bg-tertiary)]">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-[var(--text-tertiary)]">Structure</span>
                     <span className={`text-lg font-bold ${getScoreColor(analysis.structureScore)}`}>
@@ -427,7 +427,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg border border-[var(--border-primary)] bg-[var(--bg-tertiary)]">
+                <div className="p-4 rounded-sm border border-[var(--border-primary)] bg-[var(--bg-tertiary)]">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-[var(--text-tertiary)]">Clarity</span>
                     <span className={`text-lg font-bold ${getScoreColor(analysis.clarityScore)}`}>
@@ -445,7 +445,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg border border-[var(--border-primary)] bg-[var(--bg-tertiary)]">
+                <div className="p-4 rounded-sm border border-[var(--border-primary)] bg-[var(--bg-tertiary)]">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-[var(--text-tertiary)]">Content</span>
                     <span className={`text-lg font-bold ${getScoreColor(analysis.contentScore)}`}>
@@ -499,9 +499,9 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                   <button
                     key={slide.pageNumber}
                     onClick={() => setSelectedSlide(slide.pageNumber === selectedSlide ? null : slide.pageNumber)}
-                    className={`p-4 rounded-lg border text-left transition-all ${
+                    className={`p-4 rounded-sm border text-left transition-all ${
                       selectedSlide === slide.pageNumber
-                        ? "border-[var(--accent-blue)] bg-[var(--accent-blue)]/10"
+                        ? "border-[var(--accent-primary)] bg-[var(--accent-primary)]/10"
                         : "border-[var(--border-primary)] bg-[var(--bg-tertiary)] hover:border-[var(--border-focus)]"
                     }`}
                   >
@@ -534,11 +534,11 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
 
             {/* Selected Slide Content */}
             {selectedSlide && (
-              <div className="p-4 bg-[var(--accent-blue)]/10 rounded-lg border border-[var(--accent-blue)]/30">
+              <div className="p-4 bg-[var(--accent-primary)]/10 rounded-sm border border-[var(--accent-primary)]/30">
                 <h5 className="font-medium text-[var(--text-primary)] mb-3">
                   Slide {selectedSlide} Content
                 </h5>
-                <div className="p-4 bg-[var(--bg-tertiary)] rounded-lg text-[var(--text-secondary)] text-sm whitespace-pre-wrap max-h-64 overflow-y-auto">
+                <div className="p-4 bg-[var(--bg-tertiary)] rounded-sm text-[var(--text-secondary)] text-sm whitespace-pre-wrap max-h-64 overflow-y-auto">
                   {analysis.slideStats.find((s) => s.pageNumber === selectedSlide)?.text || "No content"}
                 </div>
               </div>
@@ -556,7 +556,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                   return (
                     <div
                       key={page.page_number}
-                      className="p-4 bg-[var(--bg-tertiary)] rounded-lg border border-[var(--border-primary)]"
+                      className="p-4 bg-[var(--bg-tertiary)] rounded-sm border border-[var(--border-primary)]"
                     >
                       <div className="flex items-center justify-between mb-3">
                         <h5 className="font-medium text-[var(--text-primary)]">
@@ -567,7 +567,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                             {stats?.wordCount || 0} words
                           </span>
                           {(stats?.bulletPoints || 0) > 0 && (
-                            <span className="text-xs px-2 py-1 rounded bg-[var(--accent-blue)]/20 text-[var(--accent-blue)]">
+                            <span className="text-xs px-2 py-1 rounded bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]">
                               {stats?.bulletPoints} bullets
                             </span>
                           )}
@@ -584,7 +584,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
 
             {/* Content Tips */}
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+              <div className="p-4 bg-green-500/10 rounded-sm border border-green-500/30">
                 <h5 className="font-medium text-green-400 mb-2 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -601,7 +601,7 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                 </ul>
               </div>
 
-              <div className="p-4 bg-orange-500/10 rounded-lg border border-orange-500/30">
+              <div className="p-4 bg-orange-500/10 rounded-sm border border-orange-500/30">
                 <h5 className="font-medium text-orange-400 mb-2 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -624,11 +624,11 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
         {activeTab === "insights" && (
           <div className="space-y-6">
             {/* Overall Summary Section */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[var(--accent-blue)]/20 via-purple-500/10 to-[var(--accent-blue-light)]/20 border border-[var(--accent-blue)]/30 p-6">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--accent-blue)]/20 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+            <div className="relative overflow-hidden rounded bg-gradient-to-br from-[var(--accent-primary)]/20 via-purple-500/10 to-[var(--accent-primary)]/20 border border-[var(--accent-primary)]/30 p-6">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--accent-primary)]/20 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
               <div className="relative">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--accent-blue)] to-purple-500 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--accent-primary)] to-purple-500 flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
@@ -644,14 +644,14 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
             {/* Modular Insight Cards */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Structure Card */}
-              <div className={`rounded-xl border p-5 ${
+              <div className={`rounded border p-5 ${
                 analysis.structureScore >= 80 ? "bg-green-500/10 border-green-500/30" :
                 analysis.structureScore >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
                 "bg-red-500/10 border-red-500/30"
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-sm bg-purple-500/20 flex items-center justify-center">
                       <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                       </svg>
@@ -671,8 +671,8 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                     ? `Good use of ${analysis.totalBullets} bullet points across slides.`
                     : "Consider adding bullet points for better organization."}
                 </p>
-                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
-                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-sm">
+                  <svg className="w-4 h-4 text-[var(--accent-primary)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                   <p className="text-xs text-[var(--text-tertiary)]">
@@ -682,14 +682,14 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
               </div>
 
               {/* Clarity Card */}
-              <div className={`rounded-xl border p-5 ${
+              <div className={`rounded border p-5 ${
                 analysis.clarityScore >= 80 ? "bg-green-500/10 border-green-500/30" :
                 analysis.clarityScore >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
                 "bg-red-500/10 border-red-500/30"
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-sm bg-blue-500/20 flex items-center justify-center">
                       <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -710,8 +710,8 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                     ? "Text density is appropriate for readability."
                     : `Averaging ${analysis.avgWordsPerSlide} words/slide may overwhelm viewers.`}
                 </p>
-                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
-                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-sm">
+                  <svg className="w-4 h-4 text-[var(--accent-primary)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                   <p className="text-xs text-[var(--text-tertiary)]">
@@ -721,14 +721,14 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
               </div>
 
               {/* Content Card */}
-              <div className={`rounded-xl border p-5 ${
+              <div className={`rounded border p-5 ${
                 analysis.contentScore >= 80 ? "bg-green-500/10 border-green-500/30" :
                 analysis.contentScore >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
                 "bg-red-500/10 border-red-500/30"
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-sm bg-green-500/20 flex items-center justify-center">
                       <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -746,8 +746,8 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                 <p className="text-sm text-[var(--text-secondary)] mb-3">
                   {analysis.totalWords} total words across {analysis.totalPages} slides.
                 </p>
-                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
-                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-sm">
+                  <svg className="w-4 h-4 text-[var(--accent-primary)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                   <p className="text-xs text-[var(--text-tertiary)]">
@@ -757,14 +757,14 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
               </div>
 
               {/* Balance Card */}
-              <div className={`rounded-xl border p-5 ${
+              <div className={`rounded border p-5 ${
                 analysis.performanceData[3].value >= 80 ? "bg-green-500/10 border-green-500/30" :
                 analysis.performanceData[3].value >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
                 "bg-red-500/10 border-red-500/30"
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-sm bg-orange-500/20 flex items-center justify-center">
                       <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                       </svg>
@@ -784,8 +784,8 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                     ? `${analysis.slideStats.filter((s) => s.wordCount > 100).length} slides have excessive text.`
                     : "Content is well-distributed across slides."}
                 </p>
-                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
-                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-sm">
+                  <svg className="w-4 h-4 text-[var(--accent-primary)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                   <p className="text-xs text-[var(--text-tertiary)]">
@@ -795,14 +795,14 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
               </div>
 
               {/* Engagement Card */}
-              <div className={`rounded-xl border p-5 ${
+              <div className={`rounded border p-5 ${
                 analysis.performanceData[4].value >= 80 ? "bg-green-500/10 border-green-500/30" :
                 analysis.performanceData[4].value >= 60 ? "bg-yellow-500/10 border-yellow-500/30" :
                 "bg-red-500/10 border-red-500/30"
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-sm bg-cyan-500/20 flex items-center justify-center">
                       <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
@@ -822,8 +822,8 @@ export function PDFAnalysisResults({ data, onReset }: PDFAnalysisResultsProps) {
                     ? "Good visual hierarchy with bullet points."
                     : "Add more visual breaks to maintain attention."}
                 </p>
-                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-lg">
-                  <svg className="w-4 h-4 text-[var(--accent-blue)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start gap-2 p-2 bg-[var(--bg-tertiary)]/50 rounded-sm">
+                  <svg className="w-4 h-4 text-[var(--accent-primary)] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                   <p className="text-xs text-[var(--text-tertiary)]">
